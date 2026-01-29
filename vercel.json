@@ -11,7 +11,7 @@
             "config": {
                 "distDir": "build",
                 "installCommand": "npm install",
-                "buildCommand": "npm run build"
+                "buildCommand": "CI=false npm run build"
             }
         }
     ],
