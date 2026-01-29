@@ -2,10 +2,12 @@ import React from 'react';
 import './App.css';
 import AuthPage from './pages/AuthPage';
 import DashboardPage from './pages/DashboardPage';
+import RoutePlannerPage from './pages/RoutePlannerPage';
 
 function App() {
   const [userId, setUserId] = React.useState(null);
   const [user, setUser] = React.useState(null);
+  const [currentPage, setCurrentPage] = React.useState('dashboard'); // 'dashboard' or 'planner'
 
   React.useEffect(() => {
     // Check if user is already logged in
@@ -35,11 +37,21 @@ function App() {
       {!userId ? (
         <AuthPage onAuthSuccess={handleAuthSuccess} />
       ) : (
-        <DashboardPage
-          userId={userId}
-          user={user}
-          onLogout={handleLogout}
-        />
+        <>
+          {currentPage === 'dashboard' ? (
+            <DashboardPage
+              userId={userId}
+              user={user}
+              onLogout={handleLogout}
+              onNavigateToPlanner={() => setCurrentPage('planner')}
+            />
+          ) : (
+            <RoutePlannerPage
+              userId={userId}
+              onBack={() => setCurrentPage('dashboard')}
+            />
+          )}
+        </>
       )}
     </div>
   );

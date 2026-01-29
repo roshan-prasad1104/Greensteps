@@ -2,16 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GeoTracker } from '../utils/tracking';
 import { addDailyRecord } from '../utils/api';
 import { calculateDistance } from '../utils/tracking'; // Import at top level
-import TrackingMap from './TrackingMap';
 import '../pages/DashboardPage.css';
 
-const AutomaticTrackingCard = ({ onRecordAdded }) => {
+const AutomaticTrackingCard = ({ userId, onRecordAdded }) => {
     const [isTracking, setIsTracking] = useState(false);
     const [currentStatus, setCurrentStatus] = useState(null);
     const [overrideVehicle, setOverrideVehicle] = useState('car');
     const [totalSessionDistance, setTotalSessionDistance] = useState(0);
-    const [routeHistory, setRouteHistory] = useState([]);
     const [error, setError] = useState(null);
+    const [syncing, setSyncing] = useState(false);
 
     const trackerRef = useRef(null);
     const lastUpdateRef = useRef(null);
@@ -24,7 +23,6 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
 
     const handleUpdate = async (data) => {
         setCurrentStatus(data);
-        setRouteHistory(prev => [...prev, { latitude: data.latitude, longitude: data.longitude }]);
 
         // If we have a previous position, calculate incremental distance
         if (lastUpdateRef.current) {
@@ -41,6 +39,7 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
 
                 // Periodic sync to backend (every 100 meters or significant mode change)
                 if (dist > 0.1 || data.mode !== lastUpdateRef.current.mode) {
+                    setSyncing(true);
                     try {
                         await addDailyRecord({
                             mode: data.mode,
@@ -50,6 +49,8 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
                         onRecordAdded();
                     } catch (err) {
                         console.error('Failed to sync tracking data:', err);
+                    } finally {
+                        setSyncing(false);
                     }
                 }
             }
@@ -63,7 +64,6 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
             setIsTracking(false);
             lastUpdateRef.current = null;
             setCurrentStatus(null);
-            setRouteHistory([]);
         } else {
             setError(null);
             trackerRef.current = new GeoTracker(handleUpdate, (err) => {
@@ -137,11 +137,13 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
                 </div>
             )}
 
-            <TrackingMap
-                currentPosition={currentStatus}
-                routeHistory={routeHistory}
-                isTracking={isTracking}
-            />
+            {/* Map removed from card as per request. Use 'Plan Route' button for full map. */}
+
+            {syncing && (
+                <div className="sync-indicator">
+                    <span className="sync-dot"></span> Saving progress...
+                </div>
+            )}
 
             {error && <p className="error-text">❌ {error}</p>}
 

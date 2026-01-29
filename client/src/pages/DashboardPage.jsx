@@ -10,7 +10,7 @@ import ViewOthersModal from '../components/ViewOthersModal';
 import ComparisonCard from '../components/ComparisonCard';
 import AutomaticTrackingCard from '../components/AutomaticTrackingCard';
 
-const DashboardPage = ({ userId, user, onLogout }) => {
+const DashboardPage = ({ userId, user, onLogout, onNavigateToPlanner }) => {
   const [dashboardData, setDashboardData] = React.useState(null);
   const [currentInputMode, setCurrentInputMode] = React.useState('car');
   const [loading, setLoading] = React.useState(true);
@@ -71,6 +71,13 @@ const DashboardPage = ({ userId, user, onLogout }) => {
         <h1>GreenSteps 🌳</h1>
         <div className="header-actions">
           <button
+            onClick={onNavigateToPlanner}
+            className="view-others-btn"
+            style={{ backgroundColor: '#f0fdf4', borderColor: '#bbf7d0', color: '#166534' }}
+          >
+            🗺️ Plan Route
+          </button>
+          <button
             onClick={() => setShowOthersModal(true)}
             className="view-others-btn"
             title="View others' contributions"
@@ -99,7 +106,10 @@ const DashboardPage = ({ userId, user, onLogout }) => {
         />
 
         {/* Automatic Tracking Section */}
-        <AutomaticTrackingCard onRecordAdded={handleDailyRecordAdded} />
+        <AutomaticTrackingCard
+          userId={userId}
+          onRecordAdded={handleDailyRecordAdded}
+        />
 
 
         {/* Emissions Section */}
