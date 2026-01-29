@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GeoTracker } from '../utils/tracking';
 import { addDailyRecord } from '../utils/api';
+import { calculateDistance } from '../utils/tracking'; // Import at top level
 import TrackingMap from './TrackingMap';
 import './DashboardPage.css';
 
@@ -27,7 +28,6 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
 
         // If we have a previous position, calculate incremental distance
         if (lastUpdateRef.current) {
-            const { calculateDistance } = require('../utils/tracking');
             const dist = calculateDistance(
                 lastUpdateRef.current.latitude,
                 lastUpdateRef.current.longitude,
@@ -129,7 +129,7 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
                 </div>
             )}
 
-            {isTracking && (
+            {isTracking && currentStatus && (
                 <TrackingMap
                     currentPosition={currentStatus}
                     routeHistory={routeHistory}

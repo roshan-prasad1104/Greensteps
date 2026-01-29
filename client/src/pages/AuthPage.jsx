@@ -233,7 +233,7 @@ export const AuthPage = ({ onAuthSuccess }) => {
       </div>
       <div className="auth-right">
         <div className="auth-visual-container">
-          <img src="/assets/eco_footprint.png" alt="Eco Footprint" className="auth-tree-image" />
+          <img src={process.env.PUBLIC_URL + '/assets/eco_footprint.png'} alt="Eco Footprint" className="auth-tree-image" />
           <div className="auth-visual-overlay">
             <h3>Start Your Eco-Journey</h3>
             <p>Every step counts towards a greener planet.</p>

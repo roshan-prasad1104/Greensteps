@@ -31,7 +31,7 @@ const TrackingMap = ({ currentPosition, routeHistory }) => {
         satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     };
 
-    const center = currentPosition ? [currentPosition.latitude, currentPosition.longitude] : [0, 0];
+    const center = currentPosition ? [currentPosition.latitude, currentPosition.longitude] : [20.5937, 78.9629];
     const polylinePath = routeHistory.map(p => [p.latitude, p.longitude]);
 
     return (
