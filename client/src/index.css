@@ -1,0 +1,35 @@
+:root {
+  --bg-primary: #FDFDF5;
+  --bg-card: #FFFFFF;
+  /* or slightly different beige */
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+  --accent-green: #86EFAC;
+  --accent-green-dark: #22c55e;
+  --border-color: #E5E7EB;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
