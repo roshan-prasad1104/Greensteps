@@ -22,18 +22,18 @@
         },
         {
             "src": "/static/(.*)",
-            "dest": "/client/static/$1",
-            "check": true
+            "dest": "/static/$1"
         },
         {
             "src": "/assets/(.*)",
-            "dest": "/client/public/assets/$1",
-            "check": true
+            "dest": "/assets/$1"
+        },
+        {
+            "handle": "filesystem"
         },
         {
             "src": "/(.*)",
-            "dest": "/client/index.html",
-            "check": true
+            "dest": "/index.html"
         }
     ]
 }
