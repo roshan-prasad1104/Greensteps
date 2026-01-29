@@ -226,3 +226,125 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Automatic Tracking Card Styles */
+.auto-tracking-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tracking-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tracking-toggle {
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.tracking-toggle.start {
+  background-color: #22c55e;
+  color: white;
+}
+
+.tracking-toggle.start:hover {
+  background-color: #16a34a;
+}
+
+.tracking-toggle.stop {
+  background-color: #ef4444;
+  color: white;
+}
+
+.tracking-toggle.stop:hover {
+  background-color: #dc2626;
+}
+
+.vehicle-override {
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.vehicle-override p {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.vehicle-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.vehicle-buttons button {
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #475569;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vehicle-buttons button:hover {
+  background: #f1f5f9;
+}
+
+.vehicle-buttons button.active {
+  background: #1e293b;
+  color: white;
+  border-color: #1e293b;
+}
+
+.tracking-status {
+  padding: 20px;
+  background: #f0fdf4;
+  border: 1px solid #bbfc7a;
+  border-radius: 12px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-item span {
+  color: #15803d;
+}
+
+.status-item strong {
+  color: #166534;
+}
+
+.card-hint {
+  font-size: 13px;
+  color: #64748b;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+}

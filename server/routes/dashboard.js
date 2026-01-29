@@ -49,10 +49,24 @@ router.post('/daily', authenticateToken, async (req, res) => {
     // Save daily record
     const recordRef = db.collection('dailyRecords').doc(userId);
     const recordDoc = await recordRef.get();
+
     if (recordDoc.exists) {
-      await recordRef.update({
-        records: [...(recordDoc.data().records || []), dailyRecord]
-      });
+      const records = recordDoc.data().records || [];
+      const existingRecordIndex = records.findIndex(r => r.date === today && r.mode === mode);
+
+      if (existingRecordIndex > -1 && trips === 0) {
+        // Update existing record (incremental tracking)
+        records[existingRecordIndex].distance += parseFloat(distance);
+        records[existingRecordIndex].emissions += emissions;
+        records[existingRecordIndex].points += points;
+        records[existingRecordIndex].updatedAt = new Date();
+        await recordRef.update({ records });
+      } else {
+        // Add new record or new trip
+        await recordRef.update({
+          records: [...records, dailyRecord]
+        });
+      }
     } else {
       await recordRef.set({
         userId,
@@ -84,7 +98,7 @@ router.get('/dashboard/:userId', async (req, res) => {
     // Get user profile
     const userDoc = await db.collection('users').doc(userId).get();
     console.log('[DASHBOARD] User doc exists:', userDoc.exists);
-    
+
     if (!userDoc.exists) {
       console.log('[DASHBOARD] User not found:', userId);
       return res.status(404).json({ error: 'User not found' });
@@ -167,9 +181,9 @@ router.get('/dashboard/:userId', async (req, res) => {
     res.json(response);
   } catch (error) {
     console.error('[DASHBOARD] Error:', error.message, error.stack);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to fetch dashboard data',
-      details: error.message 
+      details: error.message
     });
   }
 });

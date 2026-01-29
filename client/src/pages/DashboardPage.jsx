@@ -8,6 +8,7 @@ import DailyInputCard from '../components/DailyInputCard';
 import ChartsCard from '../components/ChartsCard';
 import ViewOthersModal from '../components/ViewOthersModal';
 import ComparisonCard from '../components/ComparisonCard';
+import AutomaticTrackingCard from '../components/AutomaticTrackingCard';
 
 const DashboardPage = ({ userId, user, onLogout }) => {
   const [dashboardData, setDashboardData] = React.useState(null);
@@ -96,6 +97,9 @@ const DashboardPage = ({ userId, user, onLogout }) => {
           onRecordAdded={handleDailyRecordAdded}
           onModeChange={setCurrentInputMode}
         />
+
+        {/* Automatic Tracking Section */}
+        <AutomaticTrackingCard onRecordAdded={handleDailyRecordAdded} />
 
 
         {/* Emissions Section */}
