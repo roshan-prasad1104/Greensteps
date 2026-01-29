@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GeoTracker } from '../utils/tracking';
 import { addDailyRecord } from '../utils/api';
+import TrackingMap from './TrackingMap';
 import './DashboardPage.css';
 
 const AutomaticTrackingCard = ({ onRecordAdded }) => {
@@ -8,6 +9,7 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
     const [currentStatus, setCurrentStatus] = useState(null);
     const [overrideVehicle, setOverrideVehicle] = useState('car');
     const [totalSessionDistance, setTotalSessionDistance] = useState(0);
+    const [routeHistory, setRouteHistory] = useState([]);
     const [error, setError] = useState(null);
 
     const trackerRef = useRef(null);
@@ -21,6 +23,7 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
 
     const handleUpdate = async (data) => {
         setCurrentStatus(data);
+        setRouteHistory(prev => [...prev, { latitude: data.latitude, longitude: data.longitude }]);
 
         // If we have a previous position, calculate incremental distance
         if (lastUpdateRef.current) {
@@ -60,6 +63,7 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
             setIsTracking(false);
             lastUpdateRef.current = null;
             setCurrentStatus(null);
+            setRouteHistory([]);
         } else {
             setError(null);
             trackerRef.current = new GeoTracker(handleUpdate, (err) => {
@@ -123,6 +127,13 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
                         <strong>{totalSessionDistance.toFixed(2)} km</strong>
                     </div>
                 </div>
+            )}
+
+            {isTracking && (
+                <TrackingMap
+                    currentPosition={currentStatus}
+                    routeHistory={routeHistory}
+                />
             )}
 
             {error && <p className="error-text">❌ {error}</p>}
