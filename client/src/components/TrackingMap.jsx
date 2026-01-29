@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icons in React-Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
+// Import CSS inside the component file to keep it encapsulated
+import 'leaflet/dist/leaflet.css';
 
 // Component to auto-center map when location updates
 const RecenterMap = ({ position }) => {
@@ -23,19 +17,30 @@ const RecenterMap = ({ position }) => {
 };
 
 const TrackingMap = ({ currentPosition, routeHistory }) => {
-    const [mapType, setMapType] = useState('street'); // 'street' or 'satellite'
+    const [mapType, setMapType] = useState('street');
 
-    // Custom TILE LAYERS for Google Maps aesthetic
+    // Move icon initialization inside useEffect to ensure it only runs in browser
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            delete L.Icon.Default.prototype._getIconUrl;
+            L.Icon.Default.mergeOptions({
+                iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+                iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+            });
+        }
+    }, []);
+
     const tiles = {
         street: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
         satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     };
 
     const center = currentPosition ? [currentPosition.latitude, currentPosition.longitude] : [20.5937, 78.9629];
-    const polylinePath = routeHistory.map(p => [p.latitude, p.longitude]);
+    const polylinePath = (routeHistory || []).map(p => [p.latitude, p.longitude]);
 
     return (
-        <div className="tracking-map-container" style={{ position: 'relative' }}>
+        <div className="tracking-map-container" style={{ position: 'relative', width: '100%', minHeight: '300px' }}>
             <div className="map-layer-selector" style={{
                 position: 'absolute',
                 top: '10px',
@@ -47,12 +52,14 @@ const TrackingMap = ({ currentPosition, routeHistory }) => {
                 <button
                     onClick={() => setMapType('street')}
                     className={`layer-btn ${mapType === 'street' ? 'active' : ''}`}
+                    type="button"
                 >
                     Street
                 </button>
                 <button
                     onClick={() => setMapType('satellite')}
                     className={`layer-btn ${mapType === 'satellite' ? 'active' : ''}`}
+                    type="button"
                 >
                     Satellite
                 </button>
@@ -69,7 +76,6 @@ const TrackingMap = ({ currentPosition, routeHistory }) => {
                     url={tiles[mapType]}
                 />
 
-                {/* Draw the tracked route */}
                 <Polyline
                     positions={polylinePath}
                     color="#3b82f6"
@@ -77,12 +83,11 @@ const TrackingMap = ({ currentPosition, routeHistory }) => {
                     opacity={0.8}
                 />
 
-                {/* Current Location Marker */}
-                {currentPosition && (
-                    <Marker position={center} />
+                {currentPosition && currentPosition.latitude && (
+                    <Marker position={[currentPosition.latitude, currentPosition.longitude]} />
                 )}
 
-                <RecenterMap position={center} />
+                {center && center[0] !== null && <RecenterMap position={center} />}
             </MapContainer>
 
             <style>{`
@@ -92,6 +97,7 @@ const TrackingMap = ({ currentPosition, routeHistory }) => {
           border: 1px solid #e2e8f0;
           border-radius: 12px;
           box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          background: #f1f5f9; /* Fallback background */
         }
         .map-layer-selector button {
           padding: 6px 12px;

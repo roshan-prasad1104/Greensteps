@@ -3,7 +3,7 @@ import { GeoTracker } from '../utils/tracking';
 import { addDailyRecord } from '../utils/api';
 import { calculateDistance } from '../utils/tracking'; // Import at top level
 import TrackingMap from './TrackingMap';
-import './DashboardPage.css';
+import '../pages/DashboardPage.css';
 
 const AutomaticTrackingCard = ({ onRecordAdded }) => {
     const [isTracking, setIsTracking] = useState(false);
@@ -129,12 +129,19 @@ const AutomaticTrackingCard = ({ onRecordAdded }) => {
                 </div>
             )}
 
-            {isTracking && currentStatus && (
-                <TrackingMap
-                    currentPosition={currentStatus}
-                    routeHistory={routeHistory}
-                />
+            {isTracking && !currentStatus && (
+                <div className="tracking-status" style={{ background: '#fef3c7', borderColor: '#f59e0b', marginBottom: '10px' }}>
+                    <p style={{ color: '#92400e', textAlign: 'center', margin: 0, fontSize: '13px' }}>
+                        ⏳ Initializing GPS... Please ensure location is enabled.
+                    </p>
+                </div>
             )}
+
+            <TrackingMap
+                currentPosition={currentStatus}
+                routeHistory={routeHistory}
+                isTracking={isTracking}
+            />
 
             {error && <p className="error-text">❌ {error}</p>}
 

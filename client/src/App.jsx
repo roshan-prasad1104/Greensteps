@@ -35,9 +35,9 @@ function App() {
       {!userId ? (
         <AuthPage onAuthSuccess={handleAuthSuccess} />
       ) : (
-        <DashboardPage 
-          userId={userId} 
-          user={user} 
+        <DashboardPage
+          userId={userId}
+          user={user}
           onLogout={handleLogout}
         />
       )}

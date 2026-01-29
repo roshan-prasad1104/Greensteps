@@ -215,7 +215,7 @@
 }
 
 /* Mobile Responsive */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .auth-right {
     display: none;
   }
@@ -223,4 +223,10 @@
   .auth-left {
     padding: 20px;
   }
+}
+
+.auth-tree-image {
+  max-width: 100%;
+  height: auto;
+  padding: 20px;
 }
